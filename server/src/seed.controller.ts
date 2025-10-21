@@ -61,7 +61,7 @@ export class SeedController {
         source: 'web',
         title: 'News A',
         content: 'Lorem ipsum dolor sit amet...',
-        url: 'https://https://www.newsweek.com/israeli-military-says-gaza-ceasefire-back-on-10903919',
+        url: 'https://www.newsweek.com/geisinger-evangelical-agree-285-million-over-alleged-no-poach-deal-2135062',
       });
 
       // === Reading ===
