@@ -7,6 +7,7 @@ import { SeedController } from './seed.controller';
 import { HealthController } from './health.controller';
 import { VocabModule } from './modules/vocab/vocab.module';
 import { AuthModule } from './auth/auth.module';
+import { UserModule } from './modules/user/user.module';
 
 @Module({
   imports: [
@@ -25,10 +26,10 @@ import { AuthModule } from './auth/auth.module';
       signOptions: { expiresIn: '7d' },
     }),
 
-    // Các module khác
     DbModule,
     VocabModule,
     AuthModule,
+    UserModule,
   ],
   controllers: [SeedController, HealthController],
 })

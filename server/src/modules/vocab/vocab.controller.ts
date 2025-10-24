@@ -16,9 +16,7 @@ import { JwtAuthGuard } from '@/auth/jwt-auth.guard';
 export class VocabController {
   constructor(private service: VocabService) {}
 
-  // =====================================================
   // 🔹 GET /vocab  → chỉ trả vocab đúng level user
-  // =====================================================
   @UseGuards(JwtAuthGuard)
   @Get()
   findByUserLevel(@Req() req) {
@@ -27,25 +25,19 @@ export class VocabController {
     return this.service.findByLevel(userLevel);
   }
 
-  // =====================================================
   // 🔹 POST /vocab → thêm vocab mới (admin hoặc cho test)
-  // =====================================================
   @Post()
   create(@Body() body: { word: string; meaning?: string; level?: string }) {
     return this.service.create(body.word, body.meaning, body.level);
   }
 
-  // =====================================================
   // 🔹 PUT /vocab/:id
-  // =====================================================
   @Put(':id')
   update(@Param('id') id: string, @Body() body: any) {
     return this.service.update(id, body);
   }
 
-  // =====================================================
   // 🔹 DELETE /vocab/:id
-  // =====================================================
   @Delete(':id')
   delete(@Param('id') id: string) {
     return this.service.delete(id);

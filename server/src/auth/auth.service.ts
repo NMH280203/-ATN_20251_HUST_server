@@ -110,7 +110,7 @@ export class AuthService {
           googleId,
           avatarUrl: picture,
           provider: 'google',
-          level: 'A1', // 👈 thêm level mặc định
+          level: 'A1',
         });
       }
 
