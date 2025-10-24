@@ -17,7 +17,7 @@ export class User {
     index: true,
   })
   email: string;
-  @Prop({ required: true }) passwordHash: string;
+  @Prop() passwordHash?: string;
   @Prop({ type: String, enum: ['A1', 'A2', 'B1', 'B2', 'C1'], default: 'A1' })
   level: Level;
   @Prop() avatarUrl?: string;

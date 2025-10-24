@@ -9,6 +9,10 @@ export class VocabService {
     @InjectModel(Vocabulary.name) private vocabModel: Model<Vocabulary>,
   ) {}
 
+  async findByLevel(level: string) {
+    return this.vocabModel.find({ level }).lean();
+  }
+
   findAll() {
     return this.vocabModel.find().sort({ createdAt: -1 });
   }

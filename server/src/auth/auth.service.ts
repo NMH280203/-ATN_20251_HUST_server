@@ -20,9 +20,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  // ============================================================
   // 🔹 Đăng ký bằng email / password
-  // ============================================================
   async signupLocal(name: string, email: string, password: string) {
     try {
       const normalizedEmail = email.trim().toLowerCase();
@@ -49,9 +47,7 @@ export class AuthService {
     }
   }
 
-  // ============================================================
   // 🔹 Đăng nhập bằng email / password
-  // ============================================================
   async signinLocal(email: string, password: string) {
     try {
       const normalizedEmail = email.trim().toLowerCase();
@@ -72,51 +68,68 @@ export class AuthService {
     }
   }
 
-  // ============================================================
   // 🔹 Đăng nhập bằng Google token (One Tap hoặc popup)
-  // ============================================================
   async loginWithGoogleToken(idToken: string) {
     try {
+      // 🧩 Kiểm tra đầu vào
+      if (!idToken) {
+        console.error('❌ Google login error: missing idToken from FE');
+        throw new UnauthorizedException('Missing Google ID token');
+      }
+
+      // 🧩 Log token đầu để debug (ẩn bớt cho an toàn)
+      console.log('🧩 Verifying Google token:', idToken.slice(0, 20), '...');
+
+      // 🧠 Xác thực token với Google
       const ticket = await this.googleClient.verifyIdToken({
         idToken,
         audience: process.env.GOOGLE_CLIENT_ID,
       });
 
       const payload = ticket.getPayload();
+      console.log('✅ Google payload:', payload);
+
       if (!payload) throw new UnauthorizedException('Invalid Google token');
 
       const { email, name, picture, sub: googleId } = payload;
 
-      const normalizedEmail = email!.trim().toLowerCase();
+      if (!email) {
+        console.error('❌ Google login: missing email in payload');
+        throw new UnauthorizedException('Google account has no email');
+      }
+
+      const normalizedEmail = email.trim().toLowerCase();
       let user = await this.userModel.findOne({ email: normalizedEmail });
 
-      // Nếu user chưa tồn tại → tạo mới
+      // 🆕 Nếu user chưa tồn tại → tạo mới
       if (!user) {
+        console.log('🆕 Creating new Google user:', normalizedEmail);
         user = await this.userModel.create({
           name,
           email: normalizedEmail,
           googleId,
           avatarUrl: picture,
           provider: 'google',
+          level: 'A1', // 👈 thêm level mặc định
         });
       }
 
+      // ✅ Trả JWT token có level
       return this.signToken(user);
     } catch (err) {
-      console.error('Google login error:', err);
+      console.error('❌ Google login error:', err);
       if (err instanceof UnauthorizedException) throw err;
       throw new InternalServerErrorException('Google login failed');
     }
   }
 
-  // ============================================================
   // 🔹 Tạo JWT Token
-  // ============================================================
   private signToken(user: User) {
     const payload = {
       sub: user._id.toString(),
       email: user.email,
       provider: user.provider,
+      level: user.level,
     };
 
     const access_token = this.jwtService.sign(payload, {
