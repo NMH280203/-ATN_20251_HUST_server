@@ -7,13 +7,23 @@ export type Level = 'A1' | 'A2' | 'B1' | 'B2' | 'C1';
 
 @Schema({ timestamps: true })
 export class User {
+  _id: Types.ObjectId;
   @Prop({ required: true }) name: string;
-  @Prop({ required: true, unique: true, lowercase: true, index: true })
+  @Prop({
+    required: true,
+    unique: true,
+    lowercase: true,
+    trim: true,
+    index: true,
+  })
   email: string;
   @Prop({ required: true }) passwordHash: string;
   @Prop({ type: String, enum: ['A1', 'A2', 'B1', 'B2', 'C1'], default: 'A1' })
   level: Level;
   @Prop() avatarUrl?: string;
+  // gg login
+  @Prop() googleId?: string;
+  @Prop({ default: 'local' }) provider?: 'local' | 'google';
   @Prop({ default: () => new Date() }) joinDate?: Date;
   @Prop() lastLogin?: Date;
 }
@@ -167,5 +177,3 @@ export class UserProgress {
   @Prop({ default: false }) ai_generated?: boolean;
 }
 export const UserProgressSchema = SchemaFactory.createForClass(UserProgress);
-
-// ---- re-export names để DbModule import gọn:
