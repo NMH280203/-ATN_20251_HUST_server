@@ -15,7 +15,7 @@ export class UserController {
     const userId = req.user.sub;
     console.log('👤 Get profile for:', userId);
 
-    return this.userService.getUserById(userId);
+    return this.userService.getUserById(userId as string);
   }
 
   // 🔹 Cập nhật thông tin người dùng (tên, level, avatar)

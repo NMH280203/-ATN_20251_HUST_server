@@ -17,6 +17,7 @@ export class UserService {
 
   async updateUser(userId: string, updates: any) {
     const user = await this.userModel
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       .findByIdAndUpdate(userId, updates, { new: true })
       .select('-passwordHash');
     if (!user) throw new NotFoundException('User not found');
