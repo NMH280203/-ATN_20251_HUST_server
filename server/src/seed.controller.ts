@@ -75,6 +75,37 @@ export class SeedController {
         ai_generated: false,
       });
 
+      // === Ghi thêm kết quả người học vào bài đọc ===
+      await this.readings.updateOne(
+        { _id: r._id },
+        {
+          $push: {
+            user_results: {
+              userId: u._id,
+              passageSnapshot: r.passage, // lưu đoạn passage hiện tại
+              qaText: JSON.stringify(
+                {
+                  Q1: 'What is the main idea?',
+                  A1: 'Sleep helps maintain health.',
+                  Q2: 'How many hours are recommended?',
+                  A2: 'About 8 hours.',
+                  Q3: "What happens when we don't sleep enough?",
+                  A3: 'We become tired and unproductive.',
+                  Q4: 'Why is sleep important?',
+                  A4: 'It helps the brain and body recover.',
+                  Q5: 'What can disturb sleep?',
+                  A5: 'Using phones late at night.',
+                },
+                null,
+                2,
+              ),
+              score: 9, 
+              submittedAt: new Date(),
+            },
+          },
+        },
+      );
+
       // === Listening ===
       const l = await this.listenings.create({
         title: 'Listening 1',

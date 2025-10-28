@@ -8,6 +8,7 @@ import { HealthController } from './health.controller';
 import { VocabModule } from './modules/vocab/vocab.module';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './modules/user/user.module';
+import { ReadingModule } from './modules/reading/reading.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { UserModule } from './modules/user/user.module';
     VocabModule,
     AuthModule,
     UserModule,
+    ReadingModule,
   ],
   controllers: [SeedController, HealthController],
 })

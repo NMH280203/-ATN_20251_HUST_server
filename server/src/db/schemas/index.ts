@@ -64,9 +64,8 @@ export const VocabularySchema = SchemaFactory.createForClass(Vocabulary);
 @Schema({ timestamps: true })
 export class ReadingExercise {
   @Prop({ required: true }) title: string;
-  @Prop({ required: true }) passage: string;
+  @Prop() passage?: string;
   @Prop() summary?: string;
-  @Prop() imageUrl?: string;
   @Prop({
     type: String,
     enum: ['A1', 'A2', 'B1', 'B2', 'C1'],
@@ -82,9 +81,11 @@ export class ReadingExercise {
   grammarList?: Id[];
   @Prop({ type: Types.ObjectId, ref: 'RawArticle' }) sourceArticleId?: Id;
   @Prop({ type: Array, default: [] }) user_results?: Array<{
-    userId: Id;
-    score: number;
-    submittedAt: Date;
+    userId: Id;               
+    passageSnapshot?: string; 
+    qaText: string;           
+    score: number;           
+    submittedAt: Date; 
   }>;
 }
 export const ReadingExerciseSchema =
