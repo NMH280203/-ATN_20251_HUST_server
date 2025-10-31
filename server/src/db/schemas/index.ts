@@ -3,6 +3,7 @@ import { HydratedDocument, Types } from 'mongoose';
 
 export type Id = Types.ObjectId;
 export type Doc<T> = HydratedDocument<T>;
+export type WritingTaskDocument = HydratedDocument<WritingTask>;
 export type Level = 'A1' | 'A2' | 'B1' | 'B2' | 'C1';
 
 @Schema({ timestamps: true })
@@ -81,11 +82,11 @@ export class ReadingExercise {
   grammarList?: Id[];
   @Prop({ type: Types.ObjectId, ref: 'RawArticle' }) sourceArticleId?: Id;
   @Prop({ type: Array, default: [] }) user_results?: Array<{
-    userId: Id;               
-    passageSnapshot?: string; 
-    qaText: string;           
-    score: number;           
-    submittedAt: Date; 
+    userId: Id;
+    passageSnapshot?: string;
+    qaText: string;
+    score: number;
+    submittedAt: Date;
   }>;
 }
 export const ReadingExerciseSchema =
@@ -114,6 +115,8 @@ export class ListeningExercise {
     score: number;
     submittedAt: Date;
   }>;
+  @Prop({ type: Date }) createdAt?: Date;
+  @Prop({ type: Date }) updatedAt?: Date;
 }
 export const ListeningExerciseSchema =
   SchemaFactory.createForClass(ListeningExercise);
@@ -121,7 +124,7 @@ export const ListeningExerciseSchema =
 @Schema({ timestamps: true })
 export class WritingTask {
   @Prop({ required: true }) title: string;
-  @Prop({ required: true }) question: string;
+  @Prop({ type: [String], default: [] }) questions: string[];
   @Prop() sample_answer?: string;
   @Prop({
     type: String,
@@ -132,10 +135,22 @@ export class WritingTask {
   level?: Level;
   @Prop() tips?: string;
   @Prop({ default: false }) ai_generated?: boolean;
-  @Prop({ type: Array, default: [] }) user_submissions?: Array<{
+  @Prop({
+    type: [
+      {
+        userId: { type: Types.ObjectId, ref: 'User', required: true },
+        content: String,
+        score: Number,
+        submittedAt: { type: Date, default: Date.now },
+      },
+    ],
+    default: [],
+  })
+  user_submissions?: Array<{
     userId: Id;
     content: string;
     score?: number;
+    feedback?: string;
     submittedAt: Date;
   }>;
 }
